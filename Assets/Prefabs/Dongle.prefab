@@ -141,6 +141,8 @@ MonoBehaviour:
   effect: {fileID: 0}
   level: 0
   isDrag: 0
+  rigid: {fileID: 0}
+  circleColider: {fileID: 0}
 --- !u!95 &4890298261068847522
 Animator:
   serializedVersion: 4

@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public int score;
     public int maxScore;
     bool isOver;
+    bool isShake;
 
     [Header("------------[ Obj Pooling ]")]
     public GameObject donglePrefab;
@@ -31,6 +32,7 @@ public class GameManager : MonoBehaviour
     [Header("------------[ UI ]")]
     public GameObject startPanel;
     public GameObject gameOverPanel;
+    public GameObject itemPanel;
     public Text scoreText;
     public Text maxScoreText;
     public Text subScoreText;
@@ -128,7 +130,7 @@ public class GameManager : MonoBehaviour
 
     public void TouchUp()
     {
-        if (lastDongle == null)
+        if (lastDongle == null || isShake)
             return;
 
         lastDongle.Drop();
@@ -221,6 +223,45 @@ public class GameManager : MonoBehaviour
 
         audioSourceSFX[cursorSFX].Play();
         cursorSFX = (cursorSFX + 1) % audioSourceSFX.Length;
+    }
+
+    public void ItemButton()
+    {
+        itemPanel.SetActive(true);
+    }
+
+    public void ShakeButton()
+    {
+        itemPanel.SetActive(false);
+
+        Shake();
+    }
+
+    void Shake()
+    {
+        if (isShake) return;
+
+        StartCoroutine(ShakeRoutine());
+    }
+
+    IEnumerator ShakeRoutine()
+    {
+        // 동글 가져오기
+        isShake = true;
+
+        Dongle[] dongles = FindObjectsOfType<Dongle>();
+
+        for (int k = 0; k < 5; k++)
+        {
+            for (int i = 0; i < dongles.Length; i++)
+            {
+                dongles[i].rigid.AddForce(new Vector2(Random.Range(-1f,1f), 1) * 100);
+            }
+
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        isShake = false;
     }
 
     private void Update()
